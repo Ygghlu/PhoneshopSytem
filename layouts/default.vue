@@ -65,7 +65,7 @@ export default {
         {
           icon: 'mdi-playlist-plus',
           title: 'Item Add',
-          to: '/itemAdd'
+          to: '/ItemAdd'
         },
         {
           icon: 'mdi-table-large',

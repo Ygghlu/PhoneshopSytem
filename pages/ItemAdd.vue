@@ -271,10 +271,14 @@
           <!-- submit -->
           <v-container fluid>
             <v-btn
+              depressed
+              color="primary"
+              :loading="loading3"
+              :disabled="loading3"
               class="mr-4"
-              @click="submit"
+              @click="submit(),loader = 'loading3'"
             >
-              submit
+              Submit
             </v-btn>
           </v-container>
         </v-row>
@@ -287,6 +291,8 @@
 export default {
   data: () => ({
     brand: '',
+    loader: null,
+    loading3: false,
     valid: false,
     ScreenSize: '',
     Chip: '',
@@ -318,6 +324,41 @@ export default {
     ]
 
   }),
+
+  watch: {
+    loader () {
+      const l = this.loader
+      this[l] = !this[l]
+
+      setTimeout(() => (this[l] = false), 3000)
+      this.loader = null
+
+      this.Model = ''
+      this.brand = ''
+      this.ScreenSize = ''
+      this.Chip = ''
+      this.Display = ''
+      this.Memory = ''
+      this.FrontCamera = ''
+      this.BackCamera = ''
+      this.ConnectionPorts = ''
+      this.SimCard = ''
+      this.WaterResistant = ''
+      this.WirelessCharging = ''
+      this.BatteryLife = ''
+      this.OperatingSystem = ''
+      this.Color = ''
+      this.quantity = ''
+      this.Dimensions = ''
+      this.Weight = ''
+      this.Warranty = ''
+      this.Charging = ''
+      this.Battery = ''
+      this.Network = ''
+      this.upmemory = ''
+      this.Price = ''
+    }
+  },
   methods: {
     submit () {
       this.array = {
