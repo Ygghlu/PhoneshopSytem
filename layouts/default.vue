@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app dark>
     <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
@@ -32,6 +32,9 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-spacer />
+      <v-btn @click="themeswitch ()">
+        <v-icon>{{ this.$vuetify.theme.dark ? 'mdi-white-balance-sunny' : ' mdi-moon-waning-crescent' }}</v-icon>
+      </v-btn>
     </v-app-bar>
     <v-main>
       <v-container>
@@ -55,9 +58,14 @@ export default {
           to: '/'
         },
         {
-          icon: 'mdi-chart-bubble',
+          icon: 'mdi-account-plus',
           title: 'Register',
           to: '/Register'
+        },
+        {
+          icon: 'mdi-playlist-plus',
+          title: 'Item Add',
+          to: '/itemAdd'
         },
         {
           icon: 'mdi-table-large',
@@ -69,6 +77,11 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'Phone Shop'
+    }
+  },
+  methods: {
+    themeswitch () {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark
     }
   }
 }

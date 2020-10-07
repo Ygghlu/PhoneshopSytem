@@ -3,7 +3,7 @@
     <v-flex class="text-center">
       <div class="container fluid">
         <div>
-          <div class="card">
+          <div>
             <div class="card-header">
               <h2>Register</h2>
             </div>
@@ -103,14 +103,41 @@
                     />
                   </div>
                 </div>
-                <v-btn
-                  depressed
-                  color="primary"
-                  @click="confirm()"
+                <v-dialog
+                  v-model="dialog"
+                  persistent
+                  max-width="290"
                 >
-                  Submit
-                </v-btn>
-                {{ array }}
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      depressed
+                      color="primary"
+                      :loading="loading3"
+                      :disabled="loading3"
+                      v-bind="attrs"
+                      @click="confirm(),loader = 'loading3'"
+                      v-on="on"
+                    >
+                      Submit
+                    </v-btn>
+                  </template>
+                  <v-card>
+                    <v-card-title class="headline">
+                      Register Success
+                    </v-card-title>
+                    <v-card-text>Welcome to our Web</v-card-text>
+                    <v-card-actions>
+                      <v-spacer />
+                      <v-btn
+                        color="red darken-1"
+                        text
+                        @click="dialog = false"
+                      >
+                        Close
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
               </v-form>
             </div>
           </div>
@@ -124,12 +151,15 @@ export default {
   data: () => ({
     valid: true,
     name: '',
+    loader: null,
+    loading3: false,
     lastname: '',
     email: '',
     date: '',
     menu: false,
     password: '',
     show1: false,
+    dialog: false,
     emailRules: [
       v => !!v || 'E-mail is required',
       v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
@@ -143,11 +173,31 @@ export default {
     ],
     rules: {
       required: value => !!value || 'Required.',
-      min: v => v.length >= 8 || 'Min 8 characters',
-      emailMatch: () => ('The email and password you entered don\'t match')
+      min: v => v.length >= 8 || 'Min 8 characters'
     },
     checkbox: false
   }),
+  watch: {
+    loader () {
+      const l = this.loader
+      this[l] = !this[l]
+
+      setTimeout(() => (this[l] = false), 3000)
+
+      this.loader = null
+      this.valid = true
+      this.name = ''
+      this.loader = null
+      this.loading3 = false
+      this.lastname = ''
+      this.email = ''
+      this.date = ''
+      this.menu = false
+      this.password = ''
+      this.show1 = false
+      this.select = null
+    }
+  },
 
   methods: {
     validate () {
