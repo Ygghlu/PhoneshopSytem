@@ -107,7 +107,8 @@ export default {
       { text: 'Battery Life', value: 'Battery' },
       { text: 'Network', value: 'Network' },
       { text: 'Expandable memory slot', value: 'expandable' },
-      { text: 'Price(Baht)', value: 'Price' }
+      { text: 'Price(Baht)', value: 'Price' },
+      { text: 'Pic', value: 'pic' }
     ]
   })
 }

@@ -1,3 +1,4 @@
+
 <template>
   <v-container>
     <v-flex class="text-center">
@@ -18,6 +19,46 @@
     <!-- ชนิดโทรศัพท์ -->
     <v-container fluid>
       <v-row align="center">
+        <label for="imageUrl">Image</label>
+        <div v-if="picurl">
+          <!-- A preview of the image. -->
+          <img :src="picurl" class="w-24 md:w-32 h-auto object-cover inline-block" alt="">
+          <!-- Delete button for deleting the image. -->
+          <button
+            v-if="picurl"
+            :disabled="isDeletingImage"
+            type="button"
+            class="bg-red-500 border-red-300 text-white"
+            @click="deleteImage"
+          >
+            {{ isDeletingImage ? 'Deleting...' : 'Delete' }}
+          </button>
+        </div>
+        <!-- Clicking this button triggers the "click" event of the file input. -->
+        <button
+          v-if="!picurl"
+          :disabled="isUploadingImage"
+          type="button"
+          @click="launchImageFile"
+        >
+          {{ isUploadingImage ? 'Uploading...' : 'Upload' }}
+        </button>
+        <input
+          ref="imageFile"
+          type="file"
+          accept="image/png, image/jpeg"
+          class="hidden"
+          @change.prevent="uploadImageFile($event.target.files)"
+        >
+        <template v-slot:selection="{ text }">
+          <v-chip
+            small
+            label
+            color="primary"
+          >
+            {{ text }}
+          </v-chip>
+        </template>
         <v-col
           class="d-flex"
           cols="12"
@@ -45,7 +86,11 @@
       </v-row>
     </v-container>
 
-    <v-form v-model="valid">
+    <v-form
+      ref="form"
+      v-model="valid"
+      lazy-validation
+    >
       <v-container>
         <v-row>
           <!-- ไซส์หน้าจอ -->
@@ -270,16 +315,46 @@
 
           <!-- submit -->
           <v-container fluid>
-            <v-btn
-              depressed
-              color="primary"
-              :loading="loading3"
-              :disabled="loading3"
-              class="mr-4"
-              @click="submit(),loader = 'loading3'"
+            <v-dialog
+              v-model="dialog"
+              width="500"
             >
-              Submit
-            </v-btn>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  depressed
+                  color="primary"
+                  :disabled="!valid"
+                  class="mr-4"
+                  v-bind="attrs"
+                  @click="validate()"
+                  v-on="on"
+                >
+                  Submit
+                </v-btn>
+              </template>
+              <v-card v-if="va=true">
+                <v-card-title class="headline grey lighten-2">
+                  Confirm Submit?
+                </v-card-title>
+
+                <v-card-text>
+                  Submit?
+                </v-card-text>
+
+                <v-divider />
+
+                <v-card-actions>
+                  <v-spacer />
+                  <v-btn
+                    color="primary"
+                    text
+                    @click="dialog = false,submit(),reset (),resetValidation ()"
+                  >
+                    Finish
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-container>
         </v-row>
       </v-container>
@@ -288,12 +363,16 @@
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
+import firebase from 'firebase/app'
+// eslint-disable-next-line no-unused-vars
+import { db, st } from '~/plugins/firebaseConfig.js'
+
 export default {
   data: () => ({
+    dialog: false,
     brand: '',
-    loader: null,
-    loading3: false,
-    valid: false,
+    valid: true,
     ScreenSize: '',
     Chip: '',
     Display: '',
@@ -318,50 +397,20 @@ export default {
     Model: '',
     Price: '',
     array: null,
+    pic: null,
+    picurl: null,
+    isUploadingImage: false,
+    blog: {},
+    isDeletingImage: false,
     items: ['Oneplus', 'Huawei', 'Nokia', 'Oppo', 'Samsung', 'Vivo', 'Xiaomi', 'Apple', 'Realme', 'Sony', 'Asus', 'Pixel'],
     nameRules: [
       v => !!v || 'Required'
     ]
 
   }),
-
-  watch: {
-    loader () {
-      const l = this.loader
-      this[l] = !this[l]
-
-      setTimeout(() => (this[l] = false), 3000)
-      this.loader = null
-
-      this.Model = ''
-      this.brand = ''
-      this.ScreenSize = ''
-      this.Chip = ''
-      this.Display = ''
-      this.Memory = ''
-      this.FrontCamera = ''
-      this.BackCamera = ''
-      this.ConnectionPorts = ''
-      this.SimCard = ''
-      this.WaterResistant = ''
-      this.WirelessCharging = ''
-      this.BatteryLife = ''
-      this.OperatingSystem = ''
-      this.Color = ''
-      this.quantity = ''
-      this.Dimensions = ''
-      this.Weight = ''
-      this.Warranty = ''
-      this.Charging = ''
-      this.Battery = ''
-      this.Network = ''
-      this.upmemory = ''
-      this.Price = ''
-    }
-  },
   methods: {
     submit () {
-      this.array = {
+      const dataPhone = {
         itemId: this.$store.state.itemId,
         Model: this.Model,
         brand: this.brand,
@@ -386,10 +435,82 @@ export default {
         Battery: this.Battery,
         Network: this.Network,
         expandable: this.upmemory,
-        Price: this.Price
+        Price: this.Price,
+        pic: this.picurl,
+        va: false,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
       }
-      this.$store.commit('itemIdAdd')
-      this.$store.commit('addItem', this.array)
+      db.collection('Phone').doc().set(dataPhone)
+        .then(function () {
+          console.log('Document successfully written! -> MyText')
+        })
+        .catch(function (error) {
+          console.error('Error writing document: ', error)
+        })
+    },
+    uploadImageFile (files) {
+      if (!files.length) {
+        return
+      }
+      const file = files[0]
+
+      if (!file.type.match('image.*')) {
+        alert('Please upload an image.')
+        return
+      }
+
+      const metadata = {
+        contentType: file.type
+      }
+
+      this.isUploadingImage = true
+
+      // Create a reference to the destination where we're uploading
+      // the file.
+      const imageRef = st.ref(`images/${file.name}`)
+
+      const uploadTask = imageRef.put(file, metadata).then((snapshot) => {
+        // Once the image is uploaded, obtain the download URL, which
+        // is the publicly accessible URL of the image.
+        return snapshot.ref.getDownloadURL().then((url) => {
+          return url
+        })
+      }).catch((error) => {
+        console.error('Error uploading image', error)
+      })
+
+      // When the upload ends, set the value of the blog image URL
+      // and signal that uploading is done.
+      uploadTask.then((url) => {
+        this.picurl = url
+        this.isUploadingImage = false
+      })
+    },
+    launchImageFile () {
+      // Trigger the file input click event.
+      this.$refs.imageFile.click()
+    },
+    deleteImage () {
+      this.$firebase.st().refFromURL(this.blog.imageUrl).delete()
+        .then(() => {
+          this.blog.imageUrl = ''
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.error('Error deleting image', error)
+        })
+    },
+    validate () {
+      this.$refs.form.validate()
+      if (this.$refs.form.validate()) {
+        this.va = true
+      }
+    },
+    reset () {
+      this.$refs.form.reset()
+    },
+    resetValidation () {
+      this.$refs.form.resetValidation()
     }
   }
 }
