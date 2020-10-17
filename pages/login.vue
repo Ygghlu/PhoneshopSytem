@@ -18,14 +18,20 @@
           <div class="form-group col-md-6">
             <v-text-field
               v-model="password"
-              label="Password"
               :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
               :rules="[rules.required, rules.min]"
               :type="show1 ? 'text' : 'password'"
-              required
+              label="Password"
+              hint="At least 8 characters"
+              counter
+              @click:append="show1 = !show1"
             />
           </div>
         </div>
+        {{ userIs }}
+        {{ id }}
+        {{ password }}
+        {{ test }}
         <v-dialog
           v-model="dialog"
           persistent
@@ -38,7 +44,7 @@
               :loading="loading3"
               :disabled="loading3"
               v-bind="attrs"
-              @click="validate(),loader = 'loading3'"
+              @click="checkUser()"
               v-on="on"
             >
               Submit
@@ -47,18 +53,34 @@
               Not a Member? Register
             </v-btn>
           </template>
-          <v-card>
+          <v-card v-if="userIs">
             <v-card-title class="headline">
-              Register Success
+              Login Success
             </v-card-title>
-            <v-card-text>Welcome to our Web</v-card-text>
+            <v-card-text>Welcome!</v-card-text>
             <v-card-actions>
               <v-spacer />
               <v-btn
                 color="red darken-1"
                 text
-                :to="{ name: 'user-id', params: { id: memId }}"
+                :to="{ name: 'user-id', params: { id: test }}"
                 @click="dialog = false,isLogin()"
+              >
+                Close
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+          <v-card v-else>
+            <v-card-title class="headline">
+              Wrong Username or password
+            </v-card-title>
+            <v-card-text>Please Re-login</v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn
+                color="red darken-1"
+                text
+                @click="dialog = false"
               >
                 Close
               </v-btn>
@@ -86,14 +108,30 @@ export default {
     rules: {
       required: value => !!value || 'Required.',
       min: v => v.length >= 8 || 'Min 8 characters'
-    }
+    },
+    userIs: false,
+    valid: true,
+    mem: null,
+    test: []
   }),
+  created () {
+    this.mem = this.$store.state.memArray
+  },
   methods: {
     validate () {
       this.$refs.form.validate()
     },
     isLogin () {
-      this.$store.commit('login')
+      this.$store.commit('login', this.test)
+    },
+    checkUser () {
+      for (const user in this.mem) {
+        this.test.push(this.mem[user].email)
+        if (this.mem[user].email === this.id && this.mem[user].password === this.password) {
+          this.test = this.mem[user]
+          this.userIs = true
+        }
+      }
     }
   }
 }

@@ -7,7 +7,8 @@ export const state = () => ({
   emID: 1,
   emArray: [{ emId: 0, name: 'John', lastname: 'Doe', position: 'Owner', salary: 'Infinite', email: 'A@B.c', password: 'inwza007' }],
   isGetdata: false,
-  isLogin: false
+  isLogin: false,
+  currentmember: null
 })
 
 export const mutations = {
@@ -26,7 +27,8 @@ export const mutations = {
   getdatanow (state) {
     state.isGetdata = true
   },
-  login (state) {
+  login (state, data) {
     state.isLogin = true
+    state.currentmember = data
   }
 }
