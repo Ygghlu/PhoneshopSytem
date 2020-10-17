@@ -5,6 +5,7 @@
         <h1>Under Construction</h1>
         {{ array }}
         {{ get }}
+        {{ member }}
       </v-col>
     </v-row>
     <v-card
@@ -55,20 +56,24 @@
 import { db } from '~/plugins/firebaseConfig.js'
 export default {
   data: () => ({
-    array: [],
-    get: null
+    array: null,
+    get: null,
+    member: null
   }),
   created () {
     this.get = this.$store.state.isGetdata
     this.array = this.$store.state.itemArray
     this.getData()
+    if (this.member != null) {
+      this.now()
+    }
   },
   methods: {
     // ...........
     getData () {
       if (!this.get) {
         this.get = this.$store.state.isGetdata
-        db.collection('Phone').orderBy('timestamp').onSnapshot((querySnapshot) => {
+        db.collection('Phone').orderBy('itemId').onSnapshot((querySnapshot) => {
           const data = []
           querySnapshot.forEach((doc) => {
             this.$store.commit('itemIdAdd')
@@ -76,6 +81,15 @@ export default {
             this.$store.commit('addItem', doc.data())
           })
           this.array = data
+        })
+        db.collection('User').orderBy('memId').onSnapshot((querySnapshot) => {
+          const data = []
+          querySnapshot.forEach((doc) => {
+            this.$store.commit('memIdInc')
+            data.push(doc.data())
+            this.$store.commit('regis', doc.data())
+          })
+          this.member = data
           this.now()
         })
       }

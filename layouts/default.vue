@@ -32,6 +32,15 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-spacer />
+      <v-btn to="/chat">
+        CHAT <v-icon>mdi-chat</v-icon>
+      </v-btn>
+      <v-btn v-if="!this.$store.state.isLogin" to="/login">
+        Login <v-icon>mdi-account</v-icon>
+      </v-btn>
+      <v-btn v-else :to="{ name: 'user-id', params: { id: memId }}">
+        Member <v-icon>mdi-account</v-icon>
+      </v-btn>
       <v-btn @click="themeswitch ()">
         <v-icon>{{ this.$vuetify.theme.dark ? 'mdi-white-balance-sunny' : ' mdi-moon-waning-crescent' }}</v-icon>
       </v-btn>
@@ -71,6 +80,11 @@ export default {
           icon: 'mdi-table-large',
           title: 'Table',
           to: '/table'
+        },
+        {
+          icon: 'mdi-hammer-wrench ',
+          title: 'Repair',
+          to: '/Repair'
         }
       ],
       miniVariant: false,

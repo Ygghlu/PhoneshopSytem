@@ -6,11 +6,12 @@ export const state = () => ({
   itemId: 1,
   emID: 1,
   emArray: [{ emId: 0, name: 'John', lastname: 'Doe', position: 'Owner', salary: 'Infinite', email: 'A@B.c', password: 'inwza007' }],
-  isGetdata: false
+  isGetdata: false,
+  isLogin: false
 })
 
 export const mutations = {
-  increment (state) {
+  memIdInc (state) {
     state.memid++
   },
   regis (state, array) {
@@ -24,5 +25,8 @@ export const mutations = {
   },
   getdatanow (state) {
     state.isGetdata = true
+  },
+  login (state) {
+    state.isLogin = true
   }
 }

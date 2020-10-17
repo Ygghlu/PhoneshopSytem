@@ -30,6 +30,16 @@
         class="elevation-1"
       />
     </v-container>
+    <v-container v-if="this.$store.state.memtype==1">
+      <h1>Account Table</h1>
+      <v-data-table
+        dense
+        :headers="headersEmploy"
+        :items="this.$store.state.emArray"
+        item-key="emId"
+        class="elevation-1"
+      />
+    </v-container>
   </div>
 </template>
 

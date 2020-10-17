@@ -8,18 +8,10 @@
               <h2>Register</h2>
             </div>
             <div class="card-body">
-              <v-form
-                ref="form"
-                v-model="valid"
-                lazy-validation
-              >
+              <v-form ref="form" v-model="valid" lazy-validation>
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <v-text-field
-                      v-model="name"
-                      label="Name"
-                      required
-                    />
+                    <v-text-field v-model="name" label="Name" required />
                   </div>
                   <div class="form-group col-md-6">
                     <v-text-field
@@ -49,17 +41,9 @@
                           v-on="on"
                         />
                       </template>
-                      <v-date-picker
-                        v-model="date"
-                        no-title
-                        scrollable
-                      >
+                      <v-date-picker v-model="date" no-title scrollable>
                         <v-spacer />
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="menu = false"
-                        >
+                        <v-btn text color="primary" @click="menu = false">
                           Cancel
                         </v-btn>
                         <v-btn
@@ -76,7 +60,7 @@
                     <v-select
                       v-model="select"
                       :items="items"
-                      :rules="[v => !!v || 'Item is required']"
+                      :rules="[(v) => !!v || 'Item is required']"
                       label="Gender"
                       required
                     />
@@ -103,11 +87,7 @@
                     />
                   </div>
                 </div>
-                <v-dialog
-                  v-model="dialog"
-                  persistent
-                  max-width="290"
-                >
+                <v-dialog v-model="dialog" persistent max-width="290">
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
                       depressed
@@ -115,7 +95,7 @@
                       :loading="loading3"
                       :disabled="loading3"
                       v-bind="attrs"
-                      @click="confirm(),loader = 'loading3'"
+                      @click="confirm(), (loader = 'loading3')"
                       v-on="on"
                     >
                       Submit
@@ -128,11 +108,7 @@
                     <v-card-text>Welcome to our Web</v-card-text>
                     <v-card-actions>
                       <v-spacer />
-                      <v-btn
-                        color="red darken-1"
-                        text
-                        @click="dialog = false"
-                      >
+                      <v-btn :to="{ name: 'user-id', params: { id: memId }}" color="red darken-1" text @click="dialog = false">
                         Close
                       </v-btn>
                     </v-card-actions>
@@ -147,6 +123,7 @@
   </v-layout>
 </template>
 <script>
+import { db } from '~/plugins/firebaseConfig.js'
 export default {
   data: () => ({
     valid: true,
@@ -166,11 +143,7 @@ export default {
     ],
     array: null,
     select: null,
-    items: [
-      'Male',
-      'Female',
-      'Other'
-    ],
+    items: ['Male', 'Female', 'Other'],
     rules: {
       required: value => !!value || 'Required.',
       min: v => v.length >= 8 || 'Min 8 characters'
@@ -210,9 +183,28 @@ export default {
       this.$refs.form.resetValidation()
     },
     confirm () {
-      this.array = { memId: this.$store.state.memid, name: this.name, lastname: this.lastname, birthdate: this.date, gender: this.select, email: this.email, password: this.password }
-      this.$store.commit('increment')
+      const dataMem = {
+        memId: this.$store.state.memid,
+        name: this.name,
+        lastname: this.lastname,
+        birthdate: this.date,
+        gender: this.select,
+        email: this.email,
+        password: this.password,
+        memtype: 2
+      }
+      db.collection('User')
+        .doc()
+        .set(dataMem)
+        .then(function () {
+          console.log('Document successfully written! -> MyText')
+        })
+        .catch(function (error) {
+          console.error('Error writing document: ', error)
+        })
+      this.$store.commit('memIdInc')
       this.$store.commit('regis', this.array)
+      this.$store.commit('login')
     }
   }
 }

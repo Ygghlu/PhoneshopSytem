@@ -1,4 +1,3 @@
-
 <template>
   <v-container>
     <v-flex class="text-center">
@@ -24,301 +23,148 @@
           <!-- A preview of the image. -->
           <img :src="picurl" class="w-24 md:w-32 h-auto object-cover inline-block" alt="">
           <!-- Delete button for deleting the image. -->
-          <button
-            v-if="picurl"
-            :disabled="isDeletingImage"
-            type="button"
-            class="bg-red-500 border-red-300 text-white"
-            @click="deleteImage"
-          >
+          <button v-if="picurl" :disabled="isDeletingImage" type="button" class="bg-red-500 border-red-300 text-white" @click="deleteImage">
             {{ isDeletingImage ? 'Deleting...' : 'Delete' }}
           </button>
         </div>
         <!-- Clicking this button triggers the "click" event of the file input. -->
-        <button
-          v-if="!picurl"
-          :disabled="isUploadingImage"
-          type="button"
-          @click="launchImageFile"
-        >
+        <button v-if="!picurl" :disabled="isUploadingImage" type="button" @click="launchImageFile">
           {{ isUploadingImage ? 'Uploading...' : 'Upload' }}
         </button>
-        <input
-          ref="imageFile"
-          type="file"
-          accept="image/png, image/jpeg"
-          class="hidden"
-          @change.prevent="uploadImageFile($event.target.files)"
-        >
+        <input ref="imageFile" type="file" accept="image/png, image/jpeg" class="hidden" @change.prevent="uploadImageFile($event.target.files)">
         <template v-slot:selection="{ text }">
-          <v-chip
-            small
-            label
-            color="primary"
-          >
+          <v-chip small label color="primary">
             {{ text }}
           </v-chip>
         </template>
-        <v-col
-          class="d-flex"
-          cols="12"
-          sm="12"
-          required
-        >
-          <v-select
-            v-model="brand"
-            :items="items"
-            label="Mobile Phone Brand"
-            filled
-          />
+        <v-col class="d-flex" cols="12" sm="12" required>
+          <v-select v-model="brand" :items="items" label="Mobile Phone Brand" filled />
         </v-col>
       </v-row>
       <v-row>
         <!-- ชื่อรุ่น -->
         <v-col cols="12" md="10">
-          <v-text-field
-            v-model="Model"
-            :rules="nameRules"
-            label="Model Name"
-            required
-          />
+          <v-text-field v-model="Model" :rules="nameRules" label="Model Name" required />
         </v-col>
       </v-row>
     </v-container>
 
-    <v-form
-      ref="form"
-      v-model="valid"
-      lazy-validation
-    >
+    <v-form ref="form" v-model="valid" lazy-validation>
       <v-container>
         <v-row>
           <!-- ไซส์หน้าจอ -->
           <v-col cols="12" md="4">
-            <v-text-field
-              v-model="ScreenSize"
-              :rules="nameRules"
-              label="Screen Size(inch)"
-              required
-            />
+            <v-text-field v-model="ScreenSize" :rules="nameRules" label="Screen Size(inch)" required />
           </v-col>
 
           <!-- ชิป -->
           <v-col cols="12" md="8">
-            <v-text-field
-              v-model="Chip"
-              :rules="nameRules"
-              label="CPU"
-              required
-            />
+            <v-text-field v-model="Chip" :rules="nameRules" label="CPU" required />
           </v-col>
 
           <!-- หน้าจอ -->
           <v-col cols="12" md="6">
-            <v-text-field
-              v-model="Display"
-              :rules="nameRules"
-              label="Display"
-              required
-            />
+            <v-text-field v-model="Display" :rules="nameRules" label="Display" required />
           </v-col>
 
           <!-- ความจุ -->
           <v-col cols="12" md="6">
-            <v-text-field
-              v-model="Memory"
-              :rules="nameRules"
-              label="Memory"
-              required
-            />
+            <v-text-field v-model="Memory" :rules="nameRules" label="Memory" required />
           </v-col>
 
           <!-- กล้องหน้า -->
           <v-col cols="12" md="6">
-            <v-text-field
-              v-model="FrontCamera"
-              :rules="nameRules"
-              label="Front Camera(MP)"
-              required
-            />
+            <v-text-field v-model="FrontCamera" :rules="nameRules" label="Front Camera(MP)" required />
           </v-col>
 
           <!-- กล้องหลัง -->
           <v-col cols="12" md="6">
-            <v-text-field
-              v-model="BackCamera"
-              :rules="nameRules"
-              label="Back Camera(MP)"
-              required
-            />
+            <v-text-field v-model="BackCamera" :rules="nameRules" label="Back Camera(MP)" required />
           </v-col>
 
           <!-- พอร์ตเชื่อมต่อ -->
           <v-col cols="12" md="2">
-            <v-text-field
-              v-model="ConnectionPorts"
-              :rules="nameRules"
-              label="Connection Ports"
-              required
-            />
+            <v-text-field v-model="ConnectionPorts" :rules="nameRules" label="Connection Ports" required />
           </v-col>
 
           <!-- ซิมการ์ด -->
           <v-col cols="12" md="5">
-            <v-text-field
-              v-model="SimCard"
-              :rules="nameRules"
-              label="Sim Card"
-              required
-            />
+            <v-text-field v-model="SimCard" :rules="nameRules" label="Sim Card" required />
           </v-col>
 
           <!-- กันน้ำ -->
           <v-col cols="12" md="5">
-            <v-text-field
-              v-model="WaterResistant"
-              :rules="nameRules"
-              label="Water Resistant"
-              required
-            />
+            <v-text-field v-model="WaterResistant" :rules="nameRules" label="Water Resistant" required />
           </v-col>
 
           <!-- การชาร์จแบบไร้สาย -->
           <v-col cols="12" md="6">
-            <v-text-field
-              v-model="WirelessCharging"
-              :rules="nameRules"
-              label="Wireless Charging"
-              required
-            />
+            <v-text-field v-model="WirelessCharging" :rules="nameRules" label="Wireless Charging" required />
           </v-col>
 
           <!-- อายุแบตเตอรี่ -->
           <v-col cols="12" md="6">
-            <v-text-field
-              v-model="BatteryLife"
-              :rules="nameRules"
-              label="Battery Life"
-              required
-            />
+            <v-text-field v-model="BatteryLife" :rules="nameRules" label="Battery Life" required />
           </v-col>
 
           <!-- ระบบปฏิบัติการ -->
           <v-col cols="12" md="3">
-            <v-text-field
-              v-model="OperatingSystem"
-              :rules="nameRules"
-              label="Operating System"
-              required
-            />
+            <v-text-field v-model="OperatingSystem" :rules="nameRules" label="Operating System" required />
           </v-col>
 
           <!-- สี -->
           <v-col cols="12" md="3">
-            <v-text-field
-              v-model="Color"
-              :rules="nameRules"
-              label="Color"
-              required
-            />
+            <v-text-field v-model="Color" :rules="nameRules" label="Color" required />
           </v-col>
 
           <!-- จำนวน -->
           <v-col cols="12" md="6">
-            <v-text-field
-              v-model="quantity"
-              :rules="nameRules"
-              label="Quantity in Stock"
-              required
-            />
+            <v-text-field v-model="quantity" :rules="nameRules" label="Quantity in Stock" required />
           </v-col>
 
           <!-- ขนาดกว้าง x ลึก x สูง -->
           <v-col cols="12" md="6">
-            <v-text-field
-              v-model="Dimensions"
-              :rules="nameRules"
-              label="Dimensions W x D x H(cm.)"
-              required
-            />
+            <v-text-field v-model="Dimensions" :rules="nameRules" label="Dimensions W x D x H(cm.)" required />
           </v-col>
 
           <!-- น้ำหนัก -->
           <v-col cols="12" md="3">
-            <v-text-field
-              v-model="Weight"
-              :rules="nameRules"
-              label="Weight(Kg.)"
-              required
-            />
+            <v-text-field v-model="Weight" :rules="nameRules" label="Weight(Kg.)" required />
           </v-col>
 
           <!-- ประกัน -->
           <v-col cols="12" md="3">
-            <v-text-field
-              v-model="Warranty"
-              :rules="nameRules"
-              label="Warranty(Year)"
-              required
-            />
+            <v-text-field v-model="Warranty" :rules="nameRules" label="Warranty(Year)" required />
           </v-col>
 
           <!-- การชาร์จ -->
           <v-col cols="12" md="7">
-            <v-text-field
-              v-model="Charging"
-              :rules="nameRules"
-              label="Charging"
-              required
-            />
+            <v-text-field v-model="Charging" :rules="nameRules" label="Charging" required />
           </v-col>
 
           <!-- แบตเตอรี่ -->
           <v-col cols="12" md="5">
-            <v-text-field
-              v-model="Battery"
-              :rules="nameRules"
-              label="Battery(mAh)"
-              required
-            />
+            <v-text-field v-model="Battery" :rules="nameRules" label="Battery(mAh)" required />
           </v-col>
 
           <!-- Network -->
           <v-col cols="12" md="5">
-            <v-text-field
-              v-model="Network"
-              :rules="nameRules"
-              label="Network"
-              required
-            />
+            <v-text-field v-model="Network" :rules="nameRules" label="Network" required />
           </v-col>
 
           <!-- หน่วยความจำและซิมการ์ดที่ขยายได้ -->
           <v-col cols="12" md="5">
-            <v-text-field
-              v-model="upmemory"
-              :rules="nameRules"
-              label="Expandable Memory and Sim Card"
-              required
-            />
+            <v-text-field v-model="upmemory" :rules="nameRules" label="Expandable Memory and Sim Card" required />
           </v-col>
 
           <!-- ราคา -->
           <v-col cols="12" md="2">
-            <v-text-field
-              v-model="Price"
-              :rules="nameRules"
-              label="Price(Baht)"
-              required
-            />
+            <v-text-field v-model="Price" :rules="nameRules" label="Price(Baht)" required />
           </v-col>
 
           <!-- submit -->
           <v-container fluid>
-            <v-dialog
-              v-model="dialog"
-              width="500"
-            >
+            <v-dialog v-model="dialog" width="500">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   depressed
@@ -345,11 +191,7 @@
 
                 <v-card-actions>
                   <v-spacer />
-                  <v-btn
-                    color="primary"
-                    text
-                    @click="dialog = false,submit(),reset (),resetValidation ()"
-                  >
+                  <v-btn color="primary" text to="/addItemSuccess" @click="dialog = false,submit(),reset (),resetValidation ()">
                     Finish
                   </v-btn>
                 </v-card-actions>
@@ -366,7 +208,10 @@
 // eslint-disable-next-line no-unused-vars
 import firebase from 'firebase/app'
 // eslint-disable-next-line no-unused-vars
-import { db, st } from '~/plugins/firebaseConfig.js'
+import {
+  db,
+  st
+} from '~/plugins/firebaseConfig.js'
 
 export default {
   data: () => ({
@@ -518,11 +363,11 @@ export default {
 
 <style>
 .theme--dark.v-application {
-  font-family: 'Sarala', sans-serif;
-  background-image: url('https://images.wallpaperscraft.com/image/dark_spots_texture_background_50355_1280x720.jpg');
-  background-attachment: fixed;
-  background-position: 100% 100%;
-  background-repeat: no-repeat;
-  background-size: cover;
+    font-family: 'Sarala', sans-serif;
+    background-image: url('https://images.wallpaperscraft.com/image/dark_spots_texture_background_50355_1280x720.jpg');
+    background-attachment: fixed;
+    background-position: 100% 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 </style>
