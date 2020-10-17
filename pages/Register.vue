@@ -203,8 +203,7 @@ export default {
           console.error('Error writing document: ', error)
         })
       this.$store.commit('memIdInc')
-      this.$store.commit('regis', this.array)
-      this.$store.commit('login')
+      this.$store.commit('login', dataMem)
     }
   }
 }

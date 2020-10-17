@@ -19,30 +19,33 @@
             :key="card.itemId"
             :cols="card.flex"
           >
-            <v-card>
+            <v-card
+              class="mx-auto"
+              max-width="400"
+            >
               <v-img
+                contain
                 :src="card.pic"
                 class="white--text align-end"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                height="200px"
               >
-                <v-card-title v-text="card.Model" />
+                <v-card-title v-text="card.brand+' '+card.Model" />
               </v-img>
+              <v-card-subtitle>
+                <p>สี : {{ card.Color }}  </p>
+                <p>ราคา: {{ card.Price }} บาท</p>
+              </v-card-subtitle>
 
               <v-card-actions>
+                <v-btn
+                  color="orange lighten-2"
+                  text
+                  :to="{ name: 'item-id', params: { item: card } }"
+                >
+                  Explore
+                </v-btn>
+
                 <v-spacer />
-
-                <v-btn icon>
-                  <v-icon>mdi-heart</v-icon>
-                </v-btn>
-
-                <v-btn icon>
-                  <v-icon>mdi-bookmark</v-icon>
-                </v-btn>
-
-                <v-btn icon>
-                  <v-icon>mdi-share-variant</v-icon>
-                </v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
