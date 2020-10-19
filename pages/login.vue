@@ -93,6 +93,7 @@
 </template>
 
 <script>
+import firebase from 'firebase/app'
 export default {
   data: () => ({
     array: [],
@@ -126,18 +127,12 @@ export default {
     },
     checkUser () {
       for (const user in this.mem) {
-        this.test.push(this.mem[user].email)
         if (this.mem[user].email === this.id && this.mem[user].password === this.password) {
           this.test = this.mem[user]
           this.userIs = true
         }
       }
-      firebase.auth().signInWithEmailAndPassword(this.id, this.password).catch(function(error) {
-  // Handle Errors here.
-  var errorCode = error.code;
-  var errorMessage = error.message;
-  // ...
-})
+      firebase.auth().signInWithEmailAndPassword(this.id, this.password)
     }
   }
 }

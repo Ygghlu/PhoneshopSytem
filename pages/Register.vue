@@ -101,7 +101,7 @@
                       Submit
                     </v-btn>
                   </template>
-                  <v-card>
+                  <v-card v-if="!dubEmail">
                     <v-card-title class="headline">
                       Register Success
                     </v-card-title>
@@ -109,6 +109,18 @@
                     <v-card-actions>
                       <v-spacer />
                       <v-btn :to="{ name: 'user-id', params: { id: memId }}" color="red darken-1" text @click="dialog = false">
+                        Close
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                  <v-card v-else>
+                    <v-card-title class="headline">
+                      DuplicateEmail
+                    </v-card-title>
+                    <v-card-text>This Email already Register with our webside</v-card-text>
+                    <v-card-actions>
+                      <v-spacer />
+                      <v-btn color="red darken-1" text @click="dialog = false ,dubEmail = false">
                         Close
                       </v-btn>
                     </v-card-actions>
@@ -149,7 +161,8 @@ export default {
       required: value => !!value || 'Required.',
       min: v => v.length >= 8 || 'Min 8 characters'
     },
-    checkbox: false
+    dupEmail: false,
+    mem: ''
   }),
   watch: {
     loader () {
@@ -159,7 +172,9 @@ export default {
       setTimeout(() => (this[l] = false), 3000)
     }
   },
-
+  created () {
+    this.mem = this.$store.state.memArray
+  },
   methods: {
     validate () {
       this.$refs.form.validate()
@@ -170,33 +185,39 @@ export default {
     resetValidation () {
       this.$refs.form.resetValidation()
     },
-    confirm () {
-      const dataMem = {
-        memId: this.$store.state.memid,
-        name: this.name,
-        lastname: this.lastname,
-        birthdate: this.date,
-        gender: this.select,
-        email: this.email,
-        memtype: 2
+    checkUser () {
+      for (const user in this.mem) {
+        if (this.mem[user].email === this.email) {
+          this.dubEmail = true
+        }
       }
-      db.collection('User')
-        .doc()
-        .set(dataMem)
-        .then(function () {
-          console.log('Document successfully written! -> MyText')
-        })
-        .catch(function (error) {
-          console.error('Error writing document: ', error)
-        })
-      this.$store.commit('memIdInc')
-      firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error) {
-  // Handle Errors here.
-  var errorCode = error.code;
-  var errorMessage = error.message;
-  // ...
-});
-      this.$store.commit('login', dataMem)
+    },
+    confirm () {
+      this.checkUser()
+      if (!this.dubEmail) {
+        const dataMem = {
+          memId: this.$store.state.memid,
+          name: this.name,
+          lastname: this.lastname,
+          birthdate: this.date,
+          gender: this.select,
+          email: this.email,
+          memtype: 2
+        }
+        db.collection('User')
+          .doc()
+          .set(dataMem)
+          .then(function () {
+            console.log('Document successfully written! -> MyText')
+          })
+          .catch(function (error) {
+            console.error('Error writing document: ', error)
+          })
+        this.$store.commit('memIdInc')
+        firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+        this.$store.commit('login', dataMem)
+        firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+      }
     }
   }
 }
