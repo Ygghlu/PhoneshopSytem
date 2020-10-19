@@ -123,6 +123,7 @@
   </v-layout>
 </template>
 <script>
+import firebase from 'firebase/app'
 import { db } from '~/plugins/firebaseConfig.js'
 export default {
   data: () => ({
@@ -156,19 +157,6 @@ export default {
       this[l] = !this[l]
 
       setTimeout(() => (this[l] = false), 3000)
-
-      this.loader = null
-      this.valid = true
-      this.name = ''
-      this.loader = null
-      this.loading3 = false
-      this.lastname = ''
-      this.email = ''
-      this.date = ''
-      this.menu = false
-      this.password = ''
-      this.show1 = false
-      this.select = null
     }
   },
 
@@ -190,7 +178,6 @@ export default {
         birthdate: this.date,
         gender: this.select,
         email: this.email,
-        password: this.password,
         memtype: 2
       }
       db.collection('User')
@@ -203,6 +190,12 @@ export default {
           console.error('Error writing document: ', error)
         })
       this.$store.commit('memIdInc')
+      firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error) {
+  // Handle Errors here.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  // ...
+});
       this.$store.commit('login', dataMem)
     }
   }
