@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/storage'
+import'firebase/auth'
 
 // Initialize Cloud Firestore through Firebase
 if (!firebase.apps.length) {
@@ -19,3 +20,6 @@ if (!firebase.apps.length) {
 
 export const db = firebase.firestore()
 export const st = firebase.storage()
+
+
+  
