@@ -21,41 +21,13 @@
                     />
                   </div>
 
-                  <v-col md="6">
-                    <v-menu
-                      ref="menu"
-                      v-model="menu"
-                      :close-on-content-click="false"
-                      :return-value.sync="date"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="290px"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="date"
-                          label="Birth day"
-                          prepend-icon="mdi-calendar"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                        />
-                      </template>
-                      <v-date-picker v-model="date" no-title scrollable>
-                        <v-spacer />
-                        <v-btn text color="primary" @click="menu = false">
-                          Cancel
-                        </v-btn>
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="$refs.menu.save(date)"
-                        >
-                          OK
-                        </v-btn>
-                      </v-date-picker>
-                    </v-menu>
-                  </v-col>
+                  <div class="form-group col-md-6">
+                    <v-text-field
+                      v-model="phone"
+                      label="Phone Number"
+                      required
+                    />
+                  </div>
                   <div class="form-group col-md-6">
                     <v-select
                       v-model="select"
@@ -75,12 +47,25 @@
                   </div>
                   <div class="form-group col-md-6">
                     <v-text-field
-                      v-model="password"
+                      v-model="pass"
                       :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                       :rules="[rules.required, rules.min]"
                       :type="show1 ? 'text' : 'password'"
-                      name="input-10-1"
+                      name="input"
                       label="Password"
+                      hint="At least 8 characters"
+                      counter
+                      @click:append="show1 = !show1"
+                    />
+                  </div>
+                  <div class="form-group col-md-6">
+                    <v-text-field
+                      v-model="password"
+                      :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                      :rules="rulespass"
+                      :type="show1 ? 'text' : 'password'"
+                      name="input-10-1"
+                      label="Password again"
                       hint="At least 8 characters"
                       counter
                       @click:append="show1 = !show1"
@@ -103,12 +88,12 @@
                   </template>
                   <v-card v-if="!dubEmail">
                     <v-card-title class="headline">
-                      Register Success
+                      Add Employee Success
                     </v-card-title>
-                    <v-card-text>Welcome to our Web</v-card-text>
+                    <v-card-text>Let's them work on blood and tear</v-card-text>
                     <v-card-actions>
                       <v-spacer />
-                      <v-btn :to="{ name: 'user-id', params: { id: memId }}" color="red darken-1" text @click="dialog = false">
+                      <v-btn :to="{ name: 'user-id'}" color="red darken-1" text @click="dialog = false">
                         Close
                       </v-btn>
                     </v-card-actions>
@@ -131,8 +116,9 @@
           </div>
         </div>
       </div>
-      id = {{ id }}
     </v-flex>
+    ID =
+    {{ id }}
   </v-layout>
 </template>
 <script>
@@ -146,9 +132,10 @@ export default {
     loading3: false,
     lastname: '',
     email: '',
-    date: '',
+    phone: '',
     menu: false,
     password: '',
+    pass: '',
     show1: false,
     dialog: false,
     emailRules: [
@@ -162,21 +149,50 @@ export default {
       required: value => !!value || 'Required.',
       min: v => v.length >= 8 || 'Min 8 characters'
     },
-    dupEmail: false,
+    dubEmail: false,
     mem: '',
+    employ: '',
+    min: 8,
     id: null
   }),
+  computed: {
+    rulespass () {
+      const rules = []
+
+      if (this.min) {
+        const rule =
+            v => (v || '').length >= 8 ||
+              `A minimum of ${this.max} characters is allowed`
+
+        rules.push(rule)
+      }
+
+      if (this.pass) {
+        const rule =
+            v => (!!v && v) === this.pass ||
+              'Values do not match'
+
+        rules.push(rule)
+      }
+
+      return rules
+    }
+  },
   watch: {
     loader () {
       const l = this.loader
       this[l] = !this[l]
 
       setTimeout(() => (this[l] = false), 3000)
-    }
+    },
+    pass: 'validate',
+    min: 'validate',
+    password: 'validate'
   },
   created () {
     this.mem = this.$store.state.memArray
-    this.id = this.$store.state.memid
+    this.employ = this.$store.state.emArray
+    this.id = this.$store.state.emID
   },
   methods: {
     validate () {
@@ -194,32 +210,37 @@ export default {
           this.dubEmail = true
         }
       }
+      for (const user in this.employ) {
+        if (this.employ[user].email === this.email) {
+          this.dubEmail = true
+        }
+      }
     },
     confirm () {
       this.checkUser()
       if (!this.dubEmail) {
-        const dataMem = {
-          memId: this.$store.state.memid,
+        const dataEm = {
+          emId: this.$store.state.emID,
           name: this.name,
           lastname: this.lastname,
-          birthdate: this.date,
+          phone: this.phone,
           gender: this.select,
           email: this.email,
-          memtype: 2
+          memtype: 1,
+          salary: 11990,
+          password: this.password
         }
-        db.collection('User')
+        db.collection('employee')
           .doc()
-          .set(dataMem)
+          .set(dataEm)
           .then(function () {
-            console.log('Document successfully written! -> MyText')
+            console.log('Document successfully written! ')
           })
           .catch(function (error) {
             console.error('Error writing document: ', error)
           })
-        this.$store.commit('memIdInc')
+        this.$store.commit('emPlus')
         firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
-        this.$store.commit('login', dataMem)
-        firebase.auth().signInWithEmailAndPassword(this.email, this.password)
       }
     }
   }

@@ -38,7 +38,7 @@
       <v-btn v-if="!this.$store.state.isLogin" to="/login">
         Login <v-icon>mdi-account</v-icon>
       </v-btn>
-      <v-btn v-else :to="{ name: 'user-id', params: { id: memId }}">
+      <v-btn v-else :to="{ name: 'user-id'} ">
         Member <v-icon>mdi-account</v-icon>
       </v-btn>
       <v-btn @click="themeswitch ()">

@@ -6,6 +6,9 @@
     {{ name }}
     {{ email }}
     {{ memtype }}
+    <v-btn v-if="memtype=2" to="/addEmploy" info>
+      add employee
+    </v-btn>
   </div>
 </template>
 <script>

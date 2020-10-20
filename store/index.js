@@ -13,8 +13,8 @@ export const state = () => ({
 })
 
 export const mutations = {
-  emIdInc (state) {
-    state.emID++
+  emPlus (state) {
+    state.emID = state.emID + 1
   },
   memIdInc (state) {
     state.memid++

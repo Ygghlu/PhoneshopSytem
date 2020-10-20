@@ -99,7 +99,7 @@ export default {
         db.collection('employee').orderBy('emId').onSnapshot((querySnapshot) => {
           const data = []
           querySnapshot.forEach((doc) => {
-            this.$store.commit('emIdInc')
+            this.$store.commit('emPlus')
             data.push(doc.data())
             this.$store.commit('emdataget', doc.data())
           })
@@ -111,7 +111,6 @@ export default {
     now () {
       this.$store.commit('getdatanow')
     }
-
   }
 }
 </script>
