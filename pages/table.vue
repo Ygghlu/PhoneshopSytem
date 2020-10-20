@@ -30,7 +30,7 @@
         class="elevation-1"
       />
     </v-container>
-    <v-container v-if="this.$store.state.memtype==1">
+    <v-container v-if="this.$store.state.memtype==0">
       <h1>Account Table</h1>
       <v-data-table
         dense

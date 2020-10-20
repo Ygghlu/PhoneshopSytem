@@ -5,18 +5,25 @@ export const state = () => ({
   itemArray: [],
   itemId: 1,
   emID: 1,
-  emArray: [{ emId: 0, name: 'John', lastname: 'Doe', position: 'Owner', salary: 'Infinite', email: 'A@B.c', password: 'inwza007' }],
+  emArray: [],
   isGetdata: false,
   isLogin: false,
-  currentmember: null
+  currentmember: null,
+  memtype: 2 /// 2คือลูกค้าทั่วไป 1 พนักงาน 0เจ้าของ
 })
 
 export const mutations = {
+  emIdInc (state) {
+    state.emID++
+  },
   memIdInc (state) {
     state.memid++
   },
   regis (state, array) {
     state.memArray.push(array)
+  },
+  emdataget (state, array) {
+    state.emArray.push(array)
   },
   addItem (state, array) {
     state.itemArray.push(array)
@@ -30,5 +37,11 @@ export const mutations = {
   login (state, data) {
     state.isLogin = true
     state.currentmember = data
+  },
+  owner (state) {
+    state.memtype = 0
+  },
+  employee (state) {
+    state.memtype = 1
   }
 }

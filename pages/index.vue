@@ -6,6 +6,7 @@
         {{ array }}
         {{ get }}
         {{ member }}
+        {{ employee }}
       </v-col>
     </v-row>
     <v-card
@@ -61,13 +62,14 @@ export default {
   data: () => ({
     array: null,
     get: null,
-    member: null
+    member: null,
+    employee: null
   }),
   created () {
     this.get = this.$store.state.isGetdata
     this.array = this.$store.state.itemArray
     this.getData()
-    if (this.member != null) {
+    if (this.employee != null) {
       this.now()
     }
   },
@@ -93,6 +95,15 @@ export default {
             this.$store.commit('regis', doc.data())
           })
           this.member = data
+        })
+        db.collection('employee').orderBy('emId').onSnapshot((querySnapshot) => {
+          const data = []
+          querySnapshot.forEach((doc) => {
+            this.$store.commit('emIdInc')
+            data.push(doc.data())
+            this.$store.commit('emdataget', doc.data())
+          })
+          this.employee = data
           this.now()
         })
       }

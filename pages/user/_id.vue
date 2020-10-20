@@ -5,6 +5,7 @@
     {{ data }}
     {{ name }}
     {{ email }}
+    {{ memtype }}
   </div>
 </template>
 <script>
@@ -13,16 +14,23 @@ export default {
   data: () => ({
     data: null,
     name: '',
-    email: ''
+    email: '',
+    memtype: null
   }),
   created () {
     this.data = this.$store.state.currentmember
     const user = firebase.auth().currentUser
+    this.memtype = this.$store.state.memtype
 
     if (user != null) {
       this.name = user.displayName
       this.email = user.email
       this.emailVerified = user.emailVerified
+    }
+    if (this.data.memtype === 0) {
+      this.$store.commit('owner')
+    } else if (this.data.memtype === 1) {
+      this.$store.commit('employee')
     }
   }
 }

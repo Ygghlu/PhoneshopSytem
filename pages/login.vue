@@ -31,7 +31,6 @@
         {{ userIs }}
         {{ id }}
         {{ password }}
-        {{ test }}
         <v-dialog
           v-model="dialog"
           persistent
@@ -63,7 +62,7 @@
               <v-btn
                 color="red darken-1"
                 text
-                :to="{ name: 'user-id', params: { id: test }}"
+                :to="{ name: 'user-id', params: { id: usernow }}"
                 @click="dialog = false,isLogin()"
               >
                 Close
@@ -110,28 +109,37 @@ export default {
       required: value => !!value || 'Required.',
       min: v => v.length >= 8 || 'Min 8 characters'
     },
-    userIs: false,
+    userIs: false, // ไม่เจอข้อมูล
     valid: true,
     mem: null,
-    test: []
+    usernow: [],
+    employ: null
   }),
   created () {
     this.mem = this.$store.state.memArray
+    this.employ = this.$store.state.emArray
   },
   methods: {
     validate () {
       this.$refs.form.validate()
     },
     isLogin () {
-      this.$store.commit('login', this.test)
+      this.$store.commit('login', this.usernow)
     },
     checkUser () {
       for (const user in this.mem) {
         if (this.mem[user].email === this.id && this.mem[user].password === this.password) {
-          this.test = this.mem[user]
+          this.usernow = this.mem[user]
           this.userIs = true
         }
       }
+      for (const user in this.employ) {
+        if (this.employ[user].email === this.id && this.employ[user].password === this.password) {
+          this.usernow = this.employ[user]
+          this.userIs = true
+        }
+      }
+
       firebase.auth().signInWithEmailAndPassword(this.id, this.password)
     }
   }
