@@ -231,7 +231,7 @@ export default {
           password: this.password
         }
         db.collection('employee')
-          .doc()
+          .doc(`employee${this.$store.state.emID}`)
           .set(dataEm)
           .then(function () {
             console.log('Document successfully written! ')

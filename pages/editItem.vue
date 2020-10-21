@@ -1,3 +1,4 @@
+/* eslint-disable quote-props */
 <template>
   <v-container>
     <v-flex class="text-center">
@@ -18,25 +19,6 @@
     <!-- ชนิดโทรศัพท์ -->
     <v-container fluid>
       <v-row align="center">
-        <label for="imageUrl">Image</label>
-        <div v-if="picurl">
-          <!-- A preview of the image. -->
-          <img :src="picurl" class="w-24 md:w-32 h-auto object-cover inline-block" alt="">
-          <!-- Delete button for deleting the image. -->
-          <button v-if="picurl" :disabled="isDeletingImage" type="button" class="bg-red-500 border-red-300 text-white" @click="deleteImage">
-            {{ isDeletingImage ? 'Deleting...' : 'Delete' }}
-          </button>
-        </div>
-        <!-- Clicking this button triggers the "click" event of the file input. -->
-        <button v-if="!picurl" :disabled="isUploadingImage" type="button" @click="launchImageFile">
-          {{ isUploadingImage ? 'Uploading...' : 'Upload' }}
-        </button>
-        <input ref="imageFile" type="file" accept="image/png, image/jpeg" class="hidden" @change.prevent="uploadImageFile($event.target.files)">
-        <template v-slot:selection="{ text }">
-          <v-chip small label color="primary">
-            {{ text }}
-          </v-chip>
-        </template>
         <v-col class="d-flex" cols="12" sm="12" required>
           <v-select v-model="brand" :items="items" label="Mobile Phone Brand" filled />
         </v-col>
@@ -209,12 +191,12 @@
 import firebase from 'firebase/app'
 // eslint-disable-next-line no-unused-vars
 import {
-  db,
-  st
+  db
 } from '~/plugins/firebaseConfig.js'
 
 export default {
   data: () => ({
+    data: null,
     dialog: false,
     brand: '',
     valid: true,
@@ -253,10 +235,38 @@ export default {
     ]
 
   }),
+  created () {
+    this.data = this.$route.params.item
+    this.Model = this.data.Model
+    this.brand = this.data.brand
+    this.ScreenSize = this.data.ScreenSize
+    this.Chip = this.data.CPU
+    this.Display = this.data.Display
+    this.Memory = this.data.Memory
+    this.FrontCamera = this.data.FrontCamera
+    this.BackCamera = this.data.BackCamera
+    this.ConnectionPorts = this.data.ConnectionPorts
+    this.SimCard = this.data.SimCard
+    this.WaterResistant = this.data.WaterResistant
+    this.WirelessCharging = this.data.WirelessCharging
+    this.BatteryLife = this.data.BatteryLife
+    this.OperatingSystem = this.data.OperatingSystem
+    this.Color = this.data.Color
+    this.quantity = this.data.inStock
+    this.Dimensions = this.data.Dimensions
+    this.Weight = this.data.Weight
+    this.Warranty = this.data.Warranty
+    this.Charging = this.data.Charging
+    this.Battery = this.data.Battery
+    this.Network = this.data.Network
+    this.upmemory = this.data.expandable
+    this.Price = this.data.Price
+    this.picurl = this.data.picurl
+  },
   methods: {
     submit () {
-      const dataPhone = {
-        itemId: this.$store.state.itemId,
+      db.collection('Phone').doc(`phone${this.data.itemId}`).update({
+        itemId: this.data.itemId,
         Model: this.Model,
         brand: this.brand,
         ScreenSize: this.ScreenSize,
@@ -281,68 +291,10 @@ export default {
         Network: this.Network,
         expandable: this.upmemory,
         Price: this.Price,
-        pic: this.picurl,
-        va: false,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      }
-      db.collection('Phone').doc(`phone${this.$store.state.itemId}`).set(dataPhone)
+      })
         .then(function () {
-          console.log('Document successfully written! -> MyText')
-        })
-        .catch(function (error) {
-          console.error('Error writing document: ', error)
-        })
-    },
-    uploadImageFile (files) {
-      if (!files.length) {
-        return
-      }
-      const file = files[0]
-
-      if (!file.type.match('image.*')) {
-        alert('Please upload an image.')
-        return
-      }
-
-      const metadata = {
-        contentType: file.type
-      }
-
-      this.isUploadingImage = true
-
-      // Create a reference to the destination where we're uploading
-      // the file.
-      const imageRef = st.ref(`images/${file.name}`)
-
-      const uploadTask = imageRef.put(file, metadata).then((snapshot) => {
-        // Once the image is uploaded, obtain the download URL, which
-        // is the publicly accessible URL of the image.
-        return snapshot.ref.getDownloadURL().then((url) => {
-          return url
-        })
-      }).catch((error) => {
-        console.error('Error uploading image', error)
-      })
-
-      // When the upload ends, set the value of the blog image URL
-      // and signal that uploading is done.
-      uploadTask.then((url) => {
-        this.picurl = url
-        this.isUploadingImage = false
-      })
-    },
-    launchImageFile () {
-      // Trigger the file input click event.
-      this.$refs.imageFile.click()
-    },
-    deleteImage () {
-      this.$firebase.st().refFromURL(this.blog.imageUrl).delete()
-        .then(() => {
-          this.blog.imageUrl = ''
-        })
-        .catch((error) => {
-          // eslint-disable-next-line no-console
-          console.error('Error deleting image', error)
+          console.log('Document successfully updated!')
         })
     },
     validate () {

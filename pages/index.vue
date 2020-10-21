@@ -7,6 +7,15 @@
         {{ get }}
         {{ member }}
         {{ employee }}
+        {{ docID }}
+      </v-col>
+      <v-col>
+        <v-text-field
+          v-model="search"
+        />
+        <v-btn @click="searchData()">
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
       </v-col>
     </v-row>
     <v-card
@@ -16,7 +25,7 @@
       <v-container fluid>
         <v-row dense>
           <v-col
-            v-for="card in array"
+            v-for="card in searchItem"
             :key="card.itemId"
             :cols="card.flex"
           >
@@ -29,6 +38,7 @@
                 :src="card.pic"
                 class="white--text align-end"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                max-height="300"
               >
                 <v-card-title v-text="card.brand+' '+card.Model" />
               </v-img>
@@ -38,6 +48,14 @@
               </v-card-subtitle>
 
               <v-card-actions>
+                <v-btn
+                  v-if="memtype!=2"
+                  color="orange lighten-2"
+                  text
+                  :to="{ name: 'editItem', params: { item: card } }"
+                >
+                  edit
+                </v-btn>
                 <v-btn
                   color="orange lighten-2"
                   text
@@ -63,8 +81,15 @@ export default {
     array: null,
     get: null,
     member: null,
-    employee: null
+    employee: null,
+    search: '',
+    searchItem: [],
+    docID: [],
+    memtype: 2
   }),
+  mounted () {
+    setTimeout(this.searchItem = this.array)
+  },
   created () {
     this.get = this.$store.state.isGetdata
     this.array = this.$store.state.itemArray
@@ -72,6 +97,7 @@ export default {
     if (this.employee != null) {
       this.now()
     }
+    this.memtype = this.$store.state.memtype
   },
   methods: {
     // ...........
@@ -110,6 +136,13 @@ export default {
     },
     now () {
       this.$store.commit('getdatanow')
+    },
+    searchData () {
+      this.searchItem = this.array
+      this.searchItem = this.searchItem.filter((item) => {
+        return item.brand.toLowerCase().match(this.search) ||
+                item.Model.toLowerCase().match(this.search)
+      })
     }
   }
 }

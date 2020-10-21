@@ -21,41 +21,13 @@
                     />
                   </div>
 
-                  <v-col md="6">
-                    <v-menu
-                      ref="menu"
-                      v-model="menu"
-                      :close-on-content-click="false"
-                      :return-value.sync="date"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="290px"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="date"
-                          label="Birth day"
-                          prepend-icon="mdi-calendar"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                        />
-                      </template>
-                      <v-date-picker v-model="date" no-title scrollable>
-                        <v-spacer />
-                        <v-btn text color="primary" @click="menu = false">
-                          Cancel
-                        </v-btn>
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="$refs.menu.save(date)"
-                        >
-                          OK
-                        </v-btn>
-                      </v-date-picker>
-                    </v-menu>
-                  </v-col>
+                  <div class="form-group col-md-6">
+                    <v-text-field
+                      v-model="phone"
+                      label="Phone Number"
+                      required
+                    />
+                  </div>
                   <div class="form-group col-md-6">
                     <v-select
                       v-model="select"
@@ -75,12 +47,25 @@
                   </div>
                   <div class="form-group col-md-6">
                     <v-text-field
-                      v-model="password"
+                      v-model="pass"
                       :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                       :rules="[rules.required, rules.min]"
                       :type="show1 ? 'text' : 'password'"
-                      name="input-10-1"
+                      name="input"
                       label="Password"
+                      hint="At least 8 characters"
+                      counter
+                      @click:append="show1 = !show1"
+                    />
+                  </div>
+                  <div class="form-group col-md-6">
+                    <v-text-field
+                      v-model="password"
+                      :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                      :rules="rulespass"
+                      :type="show1 ? 'text' : 'password'"
+                      name="input-10-1"
+                      label="Password again"
                       hint="At least 8 characters"
                       counter
                       @click:append="show1 = !show1"
@@ -108,7 +93,7 @@
                     <v-card-text>Welcome to our Web</v-card-text>
                     <v-card-actions>
                       <v-spacer />
-                      <v-btn :to="{ name: 'user-id', params: { id: memId }}" color="red darken-1" text @click="dialog = false">
+                      <v-btn :to="{ name: 'user-id'}" color="red darken-1" text @click="dialog = false">
                         Close
                       </v-btn>
                     </v-card-actions>
@@ -148,9 +133,11 @@ export default {
     email: '',
     date: '',
     menu: false,
+    pass: '',
     password: '',
     show1: false,
     dialog: false,
+    phone: '',
     emailRules: [
       v => !!v || 'E-mail is required',
       v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
@@ -166,13 +153,39 @@ export default {
     mem: '',
     id: null
   }),
+  computed: {
+    rulespass () {
+      const rules = []
+
+      if (this.min) {
+        const rule =
+            v => (v || '').length >= 8 ||
+              `A minimum of ${this.max} characters is allowed`
+
+        rules.push(rule)
+      }
+
+      if (this.pass) {
+        const rule =
+            v => (!!v && v) === this.pass ||
+              'Values do not match'
+
+        rules.push(rule)
+      }
+
+      return rules
+    }
+  },
   watch: {
     loader () {
       const l = this.loader
       this[l] = !this[l]
 
       setTimeout(() => (this[l] = false), 3000)
-    }
+    },
+    pass: 'validate',
+    min: 'validate',
+    password: 'validate'
   },
   created () {
     this.mem = this.$store.state.memArray
@@ -202,13 +215,13 @@ export default {
           memId: this.$store.state.memid,
           name: this.name,
           lastname: this.lastname,
-          birthdate: this.date,
+          phone: this.phone,
           gender: this.select,
           email: this.email,
           memtype: 2
         }
         db.collection('User')
-          .doc()
+          .doc(`user${this.$store.state.memid}`)
           .set(dataMem)
           .then(function () {
             console.log('Document successfully written! -> MyText')
