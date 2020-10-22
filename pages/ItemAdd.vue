@@ -119,7 +119,7 @@
 
           <!-- จำนวน -->
           <v-col cols="12" md="6">
-            <v-text-field v-model="quantity" type="number" :rules="nameRules" label="Quantity in Stock" required />
+            <v-text-field v-model.number="quantity" type="number" :rules="nameRules" label="Quantity in Stock" required />
           </v-col>
 
           <!-- ขนาดกว้าง x ลึก x สูง -->
@@ -159,7 +159,7 @@
 
           <!-- ราคา -->
           <v-col cols="12" md="2">
-            <v-text-field v-model="Price" type="number" :rules="nameRules" label="Price(Baht)" required />
+            <v-text-field v-model.number="Price" type="number" :rules="nameRules" label="Price(Baht)" required />
           </v-col>
 
           <!-- submit -->
