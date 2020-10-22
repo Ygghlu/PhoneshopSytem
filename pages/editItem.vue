@@ -146,6 +146,9 @@
 
           <!-- submit -->
           <v-container fluid>
+            <v-btn color="danger" @click="deleteItem()">
+              delete
+            </v-btn>
             <v-dialog v-model="dialog" width="500">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -308,6 +311,18 @@ export default {
     },
     resetValidation () {
       this.$refs.form.resetValidation()
+    },
+    deleteItem (cardId) {
+      db.collection('Phone')
+        .doc(`phone${this.data.itemId}`)
+        .delete()
+        .then(function () {
+          console.log('Document successfully deleted!')
+        })
+        .catch(function (error) {
+          console.error('Error removing document: ', error)
+        })
+      this.$router.replace('/')
     }
   }
 }

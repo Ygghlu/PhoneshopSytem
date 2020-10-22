@@ -43,5 +43,12 @@ export const mutations = {
   },
   employee (state) {
     state.memtype = 1
+  },
+  isLogout (state) {
+    state.isLogin = false
+    state.currentmember = null
+  },
+  login2 (state) {
+    state.isLogin = true
   }
 }

@@ -282,7 +282,6 @@ export default {
         expandable: this.upmemory,
         Price: this.Price,
         pic: this.picurl,
-        va: false,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       }
       db.collection('Phone').doc(`phone${this.$store.state.itemId}`).set(dataPhone)
