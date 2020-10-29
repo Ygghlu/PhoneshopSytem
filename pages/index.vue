@@ -43,6 +43,12 @@
               <v-card-subtitle>
                 <p>สี : {{ card.Color }}</p>
                 <p>ราคา: {{ card.Price }} บาท</p>
+                <p v-if="card.inStock<=0" class="red--text">
+                  สินค้าหมด
+                </p>
+                <p v-else>
+                  จำนวนในสต๊อค: {{ card.inStock }} เครื่อง
+                </p>
               </v-card-subtitle>
 
               <v-card-actions>
