@@ -6,6 +6,36 @@
     {{ name }}
     {{ email }}
     {{ memtype }}
+    <v-container v-if="memtype==2">
+      <v-col
+        v-for="card in repairArray"
+        :key="card.repairID"
+      >
+        <v-card
+          v-if="card.memId==data.memId"
+          class="mx-auto"
+          max-width="344"
+        >
+          <v-card-text>
+            <p class="display-1 text--primary">
+              {{ card.phone }}
+            </p>
+            <p>{{ card.desc }}</p>
+            <div class="text--primary">
+              Status: {{ card.status }}
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn
+              text
+              color="deep-purple accent-4"
+            >
+              Learn More
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-container>
     <v-btn v-if="memtype == 0" to="/addEmploy" info>
       add employee
     </v-btn>
@@ -21,12 +51,14 @@ export default {
     data: null,
     name: '',
     email: '',
-    memtype: null
+    memtype: null,
+    repairArray: []
   }),
   created () {
     this.data = this.$store.state.currentmember
     const user = firebase.auth().currentUser
     this.memtype = this.$store.state.memtype
+    this.repairArray = this.$store.state.repairarray
 
     if (user != null) {
       this.name = user.displayName

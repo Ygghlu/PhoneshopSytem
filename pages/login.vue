@@ -128,13 +128,13 @@ export default {
     },
     checkUser () {
       for (const user in this.mem) {
-        if (this.mem[user].email === this.id && this.mem[user].password === this.password) {
+        if (this.mem[user].email === this.id) {
           this.usernow = this.mem[user]
           this.userIs = true
         }
       }
       for (const user in this.employ) {
-        if (this.employ[user].email === this.id && this.employ[user].password === this.password) {
+        if (this.employ[user].email === this.id) {
           this.usernow = this.employ[user]
           this.userIs = true
         }

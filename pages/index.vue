@@ -96,16 +96,17 @@ export default {
     repair: []
   }),
   mounted () {
-    setTimeout((this.searchItem = this.array))
+    this.searchData()
   },
   created () {
+    this.getData()
     this.get = this.$store.state.isGetdata
     this.array = this.$store.state.itemArray
-    this.getData()
     if (this.employee != null) {
       this.now()
     }
     this.memtype = this.$store.state.memtype
+    this.searchData()
   },
   methods: {
 
@@ -119,9 +120,9 @@ export default {
             querySnapshot.forEach((doc) => {
               this.$store.commit('itemIdAdd')
               data.push(doc.data())
-              this.$store.commit('addItem', doc.data())
             })
             this.array = data
+            this.$store.commit('addItem', this.array)
           })
         db.collection('Repair')
           .orderBy('repairID')
@@ -130,7 +131,6 @@ export default {
             querySnapshot.forEach((doc) => {
               this.$store.commit('repairAdd')
               data.push(doc.data())
-              this.$store.commit('adddatarepair', doc.data())
             })
             this.repair = data
             this.$store.commit('adddatarepair', this.repair)
@@ -142,9 +142,9 @@ export default {
             querySnapshot.forEach((doc) => {
               this.$store.commit('memIdInc')
               data.push(doc.data())
-              this.$store.commit('regis', doc.data())
             })
             this.member = data
+            this.$store.commit('regis', this.member)
           })
         db.collection('employee')
           .orderBy('emId')
@@ -153,9 +153,9 @@ export default {
             querySnapshot.forEach((doc) => {
               this.$store.commit('emPlus')
               data.push(doc.data())
-              this.$store.commit('emdataget', doc.data())
             })
             this.employee = data
+            this.$store.commit('emdataget', this.employee)
             this.now()
           })
       }

@@ -22,13 +22,13 @@ export const mutations = {
     state.memid++
   },
   regis (state, array) {
-    state.memArray.push(array)
+    state.memArray = array
   },
   emdataget (state, array) {
-    state.emArray.push(array)
+    state.emArray = array
   },
   addItem (state, array) {
-    state.itemArray.push(array)
+    state.itemArray = array
   },
   itemIdAdd (state) {
     state.itemId++

@@ -312,7 +312,7 @@ export default {
     resetValidation () {
       this.$refs.form.resetValidation()
     },
-    deleteItem (cardId) {
+    deleteItem () {
       db.collection('Phone')
         .doc(`phone${this.data.itemId}`)
         .delete()
