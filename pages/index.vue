@@ -86,7 +86,8 @@ export default {
     memtype: 2,
     perPage: 6,
     currentPage: 1,
-    totalRows: 0
+    totalRows: 0,
+    repair: []
   }),
   mounted () {
     setTimeout((this.searchItem = this.array))
@@ -115,6 +116,18 @@ export default {
               this.$store.commit('addItem', doc.data())
             })
             this.array = data
+          })
+        db.collection('Repair')
+          .orderBy('repairID')
+          .onSnapshot((querySnapshot) => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+              this.$store.commit('repairAdd')
+              data.push(doc.data())
+              this.$store.commit('adddatarepair', doc.data())
+            })
+            this.repair = data
+            this.$store.commit('adddatarepair', this.repair)
           })
         db.collection('User')
           .orderBy('memId')

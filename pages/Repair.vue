@@ -6,6 +6,7 @@
       </v-form>
       <v-btn><v-icon>mdi-magnify</v-icon></v-btn>
     </v-row>
+    {{ repairArray }}
 
     <v-card v-if="repairID">
       <h1>STATUS</h1>
@@ -16,7 +17,11 @@
 <script>
 export default {
   data: () => ({
-    repairID: ''
-  })
+    repairID: '',
+    repairArray: []
+  }),
+  mounted () {
+    this.repairArray = this.$store.state.repairarray
+  }
 }
 </script>

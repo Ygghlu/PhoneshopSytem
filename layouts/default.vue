@@ -90,6 +90,21 @@ export default {
           to: '/table'
         },
         {
+          icon: 'mdi-table-large',
+          title: 'add Repair',
+          to: '/addRepair'
+        },
+        {
+          icon: 'mdi-table-large',
+          title: 'Repair for employ',
+          to: '/employeeviewrepair'
+        },
+        {
+          icon: 'mdi-table-large',
+          title: 'sales',
+          to: '/sales'
+        },
+        {
           icon: 'mdi-hammer-wrench ',
           title: 'Repair',
           to: '/Repair'

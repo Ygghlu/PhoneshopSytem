@@ -9,7 +9,9 @@ export const state = () => ({
   isGetdata: false,
   isLogin: false,
   currentmember: null,
-  memtype: 2 /// 2คือลูกค้าทั่วไป 1 พนักงาน 0เจ้าของ
+  memtype: 2, /// 2คือลูกค้าทั่วไป 1 พนักงาน 0เจ้าของ
+  repairID: 1,
+  repairarray: []
 })
 
 export const mutations = {
@@ -50,5 +52,11 @@ export const mutations = {
   },
   login2 (state) {
     state.isLogin = true
+  },
+  repairAdd (state) {
+    state.repairID++
+  },
+  adddatarepair (state, array) {
+    state.repairarray = array
   }
 }

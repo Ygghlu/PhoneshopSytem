@@ -6,8 +6,11 @@
     {{ name }}
     {{ email }}
     {{ memtype }}
-    <v-btn v-if="memtype==0" to="/addEmploy" info>
+    <v-btn v-if="memtype == 0" to="/addEmploy" info>
       add employee
+    </v-btn>
+    <v-btn v-if="memtype != 2" to="/addRepair">
+      add Repair
     </v-btn>
   </div>
 </template>
