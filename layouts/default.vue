@@ -32,9 +32,6 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-spacer />
-      <v-btn to="/chat">
-        CHAT <v-icon>mdi-chat</v-icon>
-      </v-btn>
       <v-btn v-if="!this.$store.state.isLogin" to="/login">
         Login <v-icon>mdi-account</v-icon>
       </v-btn>
