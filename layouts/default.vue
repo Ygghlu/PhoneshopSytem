@@ -103,11 +103,6 @@ export default {
           icon: 'mdi-table-large',
           title: 'sales',
           to: '/sales'
-        },
-        {
-          icon: 'mdi-hammer-wrench ',
-          title: 'editRepair',
-          to: '/editRepair'
         }
       ],
       miniVariant: false,
