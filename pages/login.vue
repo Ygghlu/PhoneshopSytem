@@ -28,9 +28,9 @@
             />
           </div>
         </div>
-        {{ userIs }}
+<!--         {{ userIs }}
         {{ id }}
-        {{ password }}
+        {{ password }} -->
         <v-dialog
           v-model="dialog"
           persistent

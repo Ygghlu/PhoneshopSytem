@@ -5,7 +5,7 @@
         <div>
           <div>
             <div class="card-header">
-              <h2>Register</h2>
+              <h2>Add Employee</h2>
             </div>
             <div class="card-body">
               <v-form ref="form" v-model="valid" lazy-validation>
@@ -117,8 +117,6 @@
         </div>
       </div>
     </v-flex>
-    ID =
-    {{ id }}
   </v-layout>
 </template>
 <script>

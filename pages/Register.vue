@@ -93,7 +93,12 @@
                     <v-card-text>Welcome to our Web</v-card-text>
                     <v-card-actions>
                       <v-spacer />
-                      <v-btn :to="{ name: 'user-id'}" color="red darken-1" text @click="dialog = false">
+                      <v-btn
+                        :to="{ name: 'user-id' }"
+                        color="red darken-1"
+                        text
+                        @click="dialog = false"
+                      >
                         Close
                       </v-btn>
                     </v-card-actions>
@@ -102,10 +107,16 @@
                     <v-card-title class="headline">
                       DuplicateEmail
                     </v-card-title>
-                    <v-card-text>This Email already Register with our webside</v-card-text>
+                    <v-card-text>
+                      This Email already Register with our webside
+                    </v-card-text>
                     <v-card-actions>
                       <v-spacer />
-                      <v-btn color="red darken-1" text @click="dialog = false ,dubEmail = false">
+                      <v-btn
+                        color="red darken-1"
+                        text
+                        @click="(dialog = false), (dubEmail = false)"
+                      >
                         Close
                       </v-btn>
                     </v-card-actions>
@@ -116,7 +127,6 @@
           </div>
         </div>
       </div>
-      id = {{ id }}
     </v-flex>
   </v-layout>
 </template>
@@ -158,17 +168,15 @@ export default {
       const rules = []
 
       if (this.min) {
-        const rule =
-            v => (v || '').length >= 8 ||
-              `A minimum of ${this.max} characters is allowed`
+        const rule = v =>
+          (v || '').length >= 8 ||
+          `A minimum of ${this.max} characters is allowed`
 
         rules.push(rule)
       }
 
       if (this.pass) {
-        const rule =
-            v => (!!v && v) === this.pass ||
-              'Values do not match'
+        const rule = v => (!!v && v) === this.pass || 'Values do not match'
 
         rules.push(rule)
       }
@@ -230,7 +238,9 @@ export default {
             console.error('Error writing document: ', error)
           })
         this.$store.commit('memIdInc')
-        firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+        firebase
+          .auth()
+          .createUserWithEmailAndPassword(this.email, this.password)
         this.$store.commit('login', dataMem)
         firebase.auth().signInWithEmailAndPassword(this.email, this.password)
       }

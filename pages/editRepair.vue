@@ -156,6 +156,7 @@ export default {
         .catch(function (error) {
           console.error('Error writing document: ', error)
         })
+      this.$router.replace('addItemSuccess')
     },
     deleteItem () {
       db.collection('Repair')
@@ -168,6 +169,7 @@ export default {
         .catch(function (error) {
           console.error('Error removing document: ', error)
         })
+      this.$router.replace('addItemSuccess')
     }
   }
 }

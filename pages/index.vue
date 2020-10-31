@@ -9,13 +9,13 @@
         <v-text-field v-model="search" label="search Phone" />
       </v-col>
       <v-btn @click="searchData()">
-        <v-icon>mdi-magnify</v-icon>
+        <v-icon>mdi-magnify</v-icon>CLICK ME
       </v-btn>
     </v-row>
     <v-card class="mx-auto" max-width="1000">
       <v-pagination
         v-model="currentPage"
-        :length="searchItem.length/4"
+        :length="searchItem.length/5"
         :per-page="perPage"
       />
       <v-container fluid>
@@ -96,7 +96,6 @@ export default {
     repair: []
   }),
   mounted () {
-    this.searchData()
   },
   created () {
     this.getData()
@@ -106,7 +105,7 @@ export default {
       this.now()
     }
     this.memtype = this.$store.state.memtype
-    this.searchData()
+    this.searchItem = this.array
   },
   methods: {
 
