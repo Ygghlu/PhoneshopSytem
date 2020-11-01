@@ -2,10 +2,6 @@
   <div>
     <h1>welcome {{ data.name }}</h1>
     Login {{ this.$store.state.isLogin }}
-    {{ data }}
-    {{ name }}
-    {{ email }}
-    {{ memtype }}
     <v-container v-if="memtype==2">
       <v-col
         v-for="card in repairArray"

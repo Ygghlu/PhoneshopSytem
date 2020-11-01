@@ -1,6 +1,7 @@
 <template>
   <v-app dark>
     <v-navigation-drawer
+      v-if="memtype!=2"
       v-model="drawer"
       :mini-variant="miniVariant"
       :clipped="clipped"
@@ -29,12 +30,11 @@
       fixed
       app
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title v-text="title" />
-      <v-spacer />
-      <v-btn to="/chat">
-        CHAT <v-icon>mdi-chat</v-icon>
+      <v-app-bar-nav-icon hidden @click.stop="drawer = !drawer" />
+      <v-btn to="/">
+        {{ title }}
       </v-btn>
+      <v-spacer />
       <v-btn v-if="!this.$store.state.isLogin" to="/login">
         Login <v-icon>mdi-account</v-icon>
       </v-btn>
@@ -68,6 +68,7 @@ export default {
       clipped: false,
       drawer: false,
       fixed: false,
+      memtype: 2,
       items: [
         {
           icon: 'mdi-apps',
@@ -124,6 +125,7 @@ export default {
     } else {
       // No user is signed in.
     }
+    this.memtype = this.$store.state.memtype
   },
   methods: {
     themeswitch () {
