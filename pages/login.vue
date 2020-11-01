@@ -28,32 +28,65 @@
             />
           </div>
         </div>
-      </v-form>
-      <v-btn v-if="userIs" @click="checkUser()" :to="{name:'user-id'}" >
-        login
-      </v-btn>
-      <v-col>
-        <v-btn v-if="!userIs" @click="checkUser(),show=!show">
-          login
-        </v-btn>
-        <v-tooltip
-          v-model="show"
-          top
+        <!--         {{ userIs }}
+        {{ id }}
+        {{ password }} -->
+        <v-dialog
+          v-model="dialog"
+          persistent
+          max-width="290"
         >
           <template v-slot:activator="{ on, attrs }">
             <v-btn
-              icon
+              depressed
+              color="primary"
+              :loading="loading3"
+              :disabled="loading3"
               v-bind="attrs"
+              @click="checkUser()"
               v-on="on"
             >
-              <v-icon color="grey lighten-1" hidden>
-                mdi-cart
-              </v-icon>
+              Submit
+            </v-btn>
+            <v-btn to="/Register">
+              Not a Member? Register
             </v-btn>
           </template>
-          <span>{{ error }}</span>
-        </v-tooltip>
-      </v-col>
+          <v-card v-if="userIs">
+            <v-card-title class="headline">
+              Login Success
+            </v-card-title>
+            <v-card-text>Welcome!</v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn
+                color="red darken-1"
+                text
+                :to="{ name: 'user-id', params: { id: usernow }}"
+                @click="dialog = false,isLogin()"
+              >
+                Close
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+          <v-card v-else>
+            <v-card-title class="headline">
+              Wrong Username or password
+            </v-card-title>
+            <v-card-text>Please Re-login</v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn
+                color="red darken-1"
+                text
+                @click="dialog = false"
+              >
+                Close
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-form>
     </div>
   </v-flex>
 </template>
@@ -66,6 +99,7 @@ export default {
     id: '',
     password: '',
     dialog: false,
+    loading3: false,
     emailRules: [
       v => !!v || 'E-mail is required',
       v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
@@ -76,41 +110,36 @@ export default {
       min: v => v.length >= 8 || 'Min 8 characters'
     },
     userIs: false, // ไม่เจอข้อมูล
+    valid: true,
     mem: null,
     usernow: [],
-    employ: null,
-    error: null,
-    show: false
+    employ: null
   }),
-  mounted () {
+  created () {
     this.mem = this.$store.state.memArray
     this.employ = this.$store.state.emArray
   },
   methods: {
+    validate () {
+      this.$refs.form.validate()
+    },
+    isLogin () {
+      this.$store.commit('login', this.usernow)
+    },
     checkUser () {
       for (const user in this.mem) {
         if (this.mem[user].email === this.id) {
           this.usernow = this.mem[user]
-          this.$store.commit('login', this.usernow)
           this.userIs = true
         }
       }
       for (const user in this.employ) {
         if (this.employ[user].email === this.id) {
           this.usernow = this.employ[user]
-          this.$store.commit('login', this.usernow)
           this.userIs = true
         }
       }
-      firebase.auth().signInWithEmailAndPassword(this.id, this.password).then(this.userIs = true).catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code
-        const errorMessage = error.message
-        this.userIs = false
-        this.error = errorCode + errorMessage
-        console.log(errorCode, errorMessage)
-        // ...
-      })
+      firebase.auth().signInWithEmailAndPassword(this.id, this.password)
     }
   }
 }
