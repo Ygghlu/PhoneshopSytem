@@ -22,12 +22,16 @@
         <div v-if="picurl">
           <!-- A preview of the image. -->
           <img :src="picurl" class="w-24 md:w-32 h-auto object-cover inline-block" alt="">
+          <!-- Delete button for deleting the image. -->
+          <button v-if="picurl" :disabled="isDeletingImage" type="button" class="bg-red-500 border-red-300 text-white" @click="deleteImage">
+            {{ isDeletingImage ? 'Deleting...' : 'Delete' }}
+          </button>
         </div>
         <!-- Clicking this button triggers the "click" event of the file input. -->
-        <v-btn v-if="!picurl" :disabled="isUploadingImage" type="button" @click="launchImageFile">
+        <button v-if="!picurl" :disabled="isUploadingImage" type="button" @click="launchImageFile">
           {{ isUploadingImage ? 'Uploading...' : 'Upload' }}
-        </v-btn>
-        <input ref="imageFile" type="file" accept="image/png, image/jpeg" hidden @change.prevent="uploadImageFile($event.target.files)">
+        </button>
+        <input ref="imageFile" type="file" accept="image/png, image/jpeg" class="hidden" @change.prevent="uploadImageFile($event.target.files)">
         <template v-slot:selection="{ text }">
           <v-chip small label color="primary">
             {{ text }}

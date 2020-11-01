@@ -1,8 +1,11 @@
 <template>
   <div>
-    <h1>Operation Success!</h1>
+    <h1>Add item Success!</h1>
+    <v-btn to="/ItemAdd">
+      Return to add Item page
+    </v-btn>
     <v-btn to="/">
-      Return to Home page
+      Home page
     </v-btn>
   </div>
 </template>

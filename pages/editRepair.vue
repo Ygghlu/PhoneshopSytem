@@ -129,6 +129,7 @@ import {
 } from '~/plugins/firebaseConfig.js'
 export default {
   data: () => ({
+    repairID: '',
     data: null,
     items: ['อยู่ระหว่างการซ่อมแซม', 'ซ่อมแซมเสร็จสิ้น', 'ปัญหาอื่นๆ กรุณาติดต่อร้านค้า'],
     status: '',
@@ -156,7 +157,6 @@ export default {
         .catch(function (error) {
           console.error('Error writing document: ', error)
         })
-      this.$router.replace('addItemSuccess')
     },
     deleteItem () {
       db.collection('Repair')
@@ -169,7 +169,6 @@ export default {
         .catch(function (error) {
           console.error('Error removing document: ', error)
         })
-      this.$router.replace('addItemSuccess')
     }
   }
 }
