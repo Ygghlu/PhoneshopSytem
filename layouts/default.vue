@@ -107,7 +107,7 @@ export default {
         {
           icon: 'mdi-hammer-wrench ',
           title: 'editRepair',
-          to: '/editRepair'
+          to: '/employeeviewrepair'
         }
       ],
       miniVariant: false,

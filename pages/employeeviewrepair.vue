@@ -39,7 +39,7 @@ export default {
   data: () => ({
     repairArray: []
   }),
-  created () {
+  mounted () {
     this.repairArray = this.$store.state.repairarray
   }
 }

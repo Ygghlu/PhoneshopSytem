@@ -5,7 +5,7 @@
         <div>
           <div>
             <div class="card-header">
-              <h2>Register</h2>
+              <h2>Add Employee</h2>
             </div>
             <div class="card-body">
               <v-form ref="form" v-model="valid" lazy-validation>
@@ -77,10 +77,8 @@
                     <v-btn
                       depressed
                       color="primary"
-                      :loading="loading3"
-                      :disabled="loading3"
                       v-bind="attrs"
-                      @click="confirm(), (loader = 'loading3')"
+                      @click="confirm()"
                       v-on="on"
                     >
                       Submit
@@ -117,8 +115,6 @@
         </div>
       </div>
     </v-flex>
-    ID =
-    {{ id }}
   </v-layout>
 </template>
 <script>
@@ -179,17 +175,11 @@ export default {
     }
   },
   watch: {
-    loader () {
-      const l = this.loader
-      this[l] = !this[l]
-
-      setTimeout(() => (this[l] = false), 3000)
-    },
     pass: 'validate',
     min: 'validate',
     password: 'validate'
   },
-  created () {
+  mounted () {
     this.mem = this.$store.state.memArray
     this.employ = this.$store.state.emArray
     this.id = this.$store.state.emID

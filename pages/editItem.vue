@@ -238,7 +238,7 @@ export default {
     ]
 
   }),
-  created () {
+  mounted () {
     this.data = this.$route.params.item
     this.Model = this.data.Model
     this.brand = this.data.brand
