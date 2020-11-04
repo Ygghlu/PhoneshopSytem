@@ -129,7 +129,7 @@ import {
 } from '~/plugins/firebaseConfig.js'
 export default {
   data: () => ({
-    data: null,
+    data: [],
     items: ['อยู่ระหว่างการซ่อมแซม', 'ซ่อมแซมเสร็จสิ้น', 'ปัญหาอื่นๆ กรุณาติดต่อร้านค้า'],
     status: '',
     desc: '',

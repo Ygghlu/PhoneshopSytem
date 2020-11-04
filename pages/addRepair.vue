@@ -30,7 +30,7 @@
     </v-col>
     <v-col sm="6">
       <v-text-field
-        :value="model"
+        v-model="model"
         label="Model"
         outlined
         hint="มือถือรุ่นอะไร สีอะไร "
